@@ -1,32 +1,26 @@
-# Yahoo Stock API
+# Stock Portfolio Tracker Server
 
-A stock portfolio management API with Yahoo Finance integration, built with Node.js, Prisma, and PostgreSQL. This API allows you to manage stock portfolios, track transactions, and retrieve historical stock data.
+A TradingView style stock portfolio management API with Yahoo Finance integration, built with Node.js, Prisma, and PostgreSQL. This API allows you to manage stock portfolios, track transactions, and retrieve historical stock data.
 
 ## Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd yahoo-stock-api-opensource
-   ```
-
-2. **Install dependencies**
+1. **Install dependencies**
    ```bash
    npm install
    ```
+2. **Install Vercel CLI (Vercel will be installed globally if not installed before)**
+   npm i -g vercel   
 
 3. **Set up environment variables**
    ```bash
    cp .env.example .env
    ```
 
-4. **Configure your `.env` file** (see [Environment Variables](#environment-variables) section)
+4. **Set up the database** (see [Database Setup](#database-setup) section)
 
-5. **Set up the database** (see [Database Setup](#database-setup) section)
+5. **Configure your `.env` file** (see [Environment Variables](#environment-variables) section)
 
 ## Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
 
 ```env
 # Database Configuration
@@ -51,15 +45,11 @@ FROM_EMAIL="noreply@yourdomain.com"
 | `DATABASE_URL` | PostgreSQL connection string | ✅ Yes |
 | `JWT_SECRET` | Secret key for JWT token signing | ✅ Yes |
 | `API_SECRET_KEY` | API key for accessing stock endpoints | ✅ Yes |
-| `RESEND_API_KEY` | Resend API key for sending emails | ✅ Yes |
-| `FROM_EMAIL` | Email address for sending notifications | ✅ Yes |
+| `RESEND_API_KEY` | Resend API key for sending emails | ❌ Optional |
+| `FROM_EMAIL` | Email address for sending notifications | ❌ Optional |
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID | ❌ Optional |
 
 ## Database Setup
-
-This project uses Prisma with PostgreSQL. You have several options for setting up the database:
-
-### Option 1: Prisma Dev Database (Recommended for Development)
 
 ```bash
 # Start Prisma's local PostgreSQL instance
@@ -75,49 +65,10 @@ npx prisma db push
 npx prisma studio
 ```
 
-Your `DATABASE_URL` should be:
+Your `DATABASE_URL` should be generated from npx prisma dev:
 ```env
 DATABASE_URL="prisma+postgres://localhost:51213/?api_key=..."
 ```
-
-### Option 2: Docker PostgreSQL
-
-```bash
-# Create docker-compose.yml
-cat > docker-compose.yml << EOF
-version: '3.8'
-services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: yahoo_stock_api
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
-EOF
-
-# Start database
-docker-compose up -d
-
-# Run Prisma setup
-npx prisma generate
-npx prisma db push
-```
-
-Your `DATABASE_URL` should be:
-```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/yahoo_stock_api"
-```
-
-### Option 3: Hosted PostgreSQL
-
-Use a hosted PostgreSQL service (Supabase, PlanetScale, etc.) and set your `DATABASE_URL` accordingly.
 
 ## Running the Application
 
@@ -126,23 +77,20 @@ Use a hosted PostgreSQL service (Supabase, PlanetScale, etc.) and set your `DATA
 1. **Start the database**
    ```bash
    npx prisma dev  # If using Prisma dev database
-   # OR
-   docker-compose up -d  # If using Docker
    ```
 
 2. **Generate Prisma client** (if not done already)
    ```bash
    npx prisma generate
    ```
-### Local Testing with Vercel CLI
+3. **Local Testing with Vercel CLI**
+  ```bash
+  # Install Vercel CLI
+  npm i -g vercel
 
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Run locally
-vercel dev
-```
+  # Run locally
+  vercel dev --listen 8080
+  ```
 
 ## API Endpoints
 
