@@ -9,7 +9,9 @@ A TradingView style stock portfolio management API with Yahoo Finance integratio
    npm install
    ```
 2. **Install Vercel CLI (Vercel will be installed globally if not installed before)**
-   npm i -g vercel   
+   ```bash
+   npm i -g vercel
+   ```   
 
 3. **Set up environment variables**
    ```bash
@@ -64,6 +66,7 @@ npx prisma db push
 # (Optional) Open Prisma Studio to view data
 npx prisma studio
 ```
+Opens at http://localhost:5555
 
 Your `DATABASE_URL` should be generated from npx prisma dev:
 ```env
@@ -84,13 +87,13 @@ DATABASE_URL="prisma+postgres://localhost:51213/?api_key=..."
    npx prisma generate
    ```
 3. **Local Testing with Vercel CLI**
-  ```bash
-  # Install Vercel CLI
-  npm i -g vercel
+   ```bash
+   # Install Vercel CLI
+   npm i -g vercel
 
-  # Run locally
-  vercel dev --listen 8080
-  ```
+   # Run locally
+   vercel dev --listen 8080
+   ```
 
 ## API Endpoints
 
@@ -136,14 +139,6 @@ curl -X POST "https://localhost:8080/api/auth/login" \
     "name": "John Doe"
   }'
 ```
-
-### Prisma Studio
-
-View and manage your database:
-```bash
-npx prisma studio
-```
-Opens at http://localhost:5555
 
 ## License
 
