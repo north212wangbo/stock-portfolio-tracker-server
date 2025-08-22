@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String?  // Optional for social login users
+  name      String?
+  provider  String?  // 'local', 'google', 'apple'
+  providerId String? // Social provider user ID
+  avatar    String?  // Profile picture URL
+  verified  Boolean  @default(false)
+  otp       String?
+  otpExpires DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  portfolios Portfolio[]
+  
+  @@unique([provider, providerId])
+}
+
+model Portfolio {
+  id               String   @id @default(uuid())
+  userId           String
+  name             String
+  cachedGainLoss   Float?
+  cachedTotalValue Float?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  
+  @@unique([userId, name])
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  symbol    String
+  price     Float
+  type      TransactionType
+  shares    Float
+  timestamp DateTime @default(now())
+  created_at DateTime @default(now())
+  
+  portfolios Portfolio[]
+}
+
+enum TransactionType {
+  BUY
+  SELL
+}
+
+model StockHistory {
+  id        String   @id @default(uuid())
+  symbol    String   @unique
+  startDate DateTime
+  endDate   DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model stockprice {
+  id            String   @id @default(uuid())
+  symbol        String
+  date          DateTime
+  close         Float
+  change        Float?
+  percentChange Float?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@unique([symbol, date])
+}
